@@ -10,5 +10,6 @@ public interface UserService {
 	public User save (User user);
 	public User getUser(int userId);
 	public boolean deleteUser(int userId);
+	public User updateUser(User user);
 
 }

@@ -15,8 +15,18 @@ public class LoginResponse {
 	private String message;
 	
 	private String code;
-
 	
+	private Integer userId;
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+
 	public String getUsername() {
 		return username;
 	}

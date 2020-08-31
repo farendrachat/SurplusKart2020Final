@@ -48,6 +48,7 @@ public class ProductServiceImpl implements ProductService {
 			return prSaved; 
 		
 	}	
+	@Override
 	public boolean deleteProduct(int prId){
 		Product product = null;
 		boolean isDeleted = true;

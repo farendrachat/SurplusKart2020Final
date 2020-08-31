@@ -27,5 +27,10 @@ public final class Constants {
 	public final static String USER_DELETED_SUCCESSFULLY="User deleted successfully";
 
 	public final static String USER_UPDATED_SUCCESSFULLY="User updated successfully";
+	
+	public final static String PRODUCT_DELETED_SUCCESSFULLY="Product deleted successfully";
+	
+	public final static String PRODUCT_UPDATED_SUCCESSFULLY="Product updated successfully";
+
 }
 

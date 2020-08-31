@@ -1,6 +1,7 @@
 package com.surplus.task.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,9 +49,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User getUser(int userId) {
-		User user = userRepository.findByUserId(userId);
-		return user;
+	public User getUser(int userId) {		
+		logger.info("Executing getUser method with id : " + userId);
+		Optional<User> user = userRepository.findById(userId);
+		if (user.isPresent())
+			return user.get();
+		else {
+			logger.warn("No User found with id : " + userId);
+			throw new NoDataFoundException(Constants.NO_DATA_AVALIABLE);
+		}
 	}
 
 	@Override
@@ -63,6 +70,23 @@ public class UserServiceImpl implements UserService {
 		} else {
 			logger.info("Completed getAllUsers method with users : " + users);
 			return users;
+		}
+	}
+	
+	public User updateUser(User user) {
+		logger.info("Executing update meothod with User details : " + user);
+		List<User> users = userRepository.findByName(user.getName());
+		if (users.size() > 0) {
+			User savedUser = users.get(0);
+			savedUser.setPassword(user.getPassword());
+			savedUser.setRole(user.getRole());
+			savedUser.setName(user.getName());
+			userRepository.save(savedUser);
+			logger.info("User details with updated successfully with User details : " + user);
+			return user;
+		} else {
+			logger.warn("No User found with name : " + user.getName());
+			throw new NoDataFoundException(Constants.USER_NOT_EXIST);
 		}
 	}
 }

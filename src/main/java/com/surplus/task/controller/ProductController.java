@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,8 +21,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.surplus.task.domain.ImageModel;
 import com.surplus.task.domain.Product;
+import com.surplus.task.dto.ProductResponse;
 import com.surplus.task.dto.ProductsResponse;
 import com.surplus.task.dto.Response;
+import com.surplus.task.dto.UserResponse;
 import com.surplus.task.service.ImageService;
 import com.surplus.task.service.ProductService;
 import com.surplus.task.utils.Constants;
@@ -41,14 +44,17 @@ import org.slf4j.LoggerFactory;
 public class ProductController {
 	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 	
+	@Autowired
 	private ProductService productService;
+	@Autowired
 	private ImageService imageService;
 	
-	ProductController(ProductService productService,ImageService imageService)
-	{
-		this.productService = productService;
-		this.imageService = imageService;
-	}
+//	@Autowired
+//	ProductController(ProductService productService,ImageService imageService)
+//	{
+//		this.productService = productService;
+//		this.imageService = imageService;
+//	}
 	
 	@ApiOperation(value = "View a list of available products", response = Iterable.class)
 	@ApiResponses(value = {
@@ -167,12 +173,35 @@ public class ProductController {
         return true;
 	}
 	
-	@ApiOperation(value = "Delete product from product id", response = Boolean.class)
-	@CrossOrigin
-	@DeleteMapping("/delete")
-	public boolean deleteProduct(@RequestParam(value="productId",required=true) int productId)
-	{		
-		return productService.deleteProduct(productId);
+//	@ApiOperation(value = "Delete product from product id", response = Boolean.class)
+//	@CrossOrigin
+//	@DeleteMapping("/delete")
+//	public boolean deleteProduct(@RequestParam(value="productId",required=true) int productId)
+//	{		
+//		return productService.deleteProduct(productId);
+//	}
+	
+	@DeleteMapping(value = "/deleteProduct/{prId}")
+	@CrossOrigin(origins = "http://localhost:4200")
+	public Response deleteProduct(@PathVariable int prId) {
+		logger.info("Delete Product request received with id : "+prId);
+		Response response = new Response();
+		boolean isDeleted = productService.deleteProduct(prId);		
+		response.setMessage(Constants.PRODUCT_DELETED_SUCCESSFULLY);
+		response.setStatus(Constants.SUCCESS);
+		logger.info("Delete Product request completed with id : "+prId);
+		return response;
+	}
+	
+	@GetMapping(value="/getProduct/{prId}",produces = MediaType.APPLICATION_JSON_VALUE)
+	public ProductResponse getProduct(@PathVariable Integer prId) {
+		logger.info("Get User request received with id : "+prId);
+		ProductResponse response=new ProductResponse();
+		response.setMessage(Constants.SUCCESS);
+		response.setStatus(Constants.SUCCESS);
+		response.setProduct(productService.getProduct(prId));
+		logger.info("Get User request completed with User details : "+response.getProduct());
+		return response;
 	}
 
 }

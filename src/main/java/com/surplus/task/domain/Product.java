@@ -1,6 +1,6 @@
 package com.surplus.task.domain;
 
-import java.util.Date;
+import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,22 +20,20 @@ public class Product {
 	
 	@Column(nullable = false)
 	protected String name;
-
 	@Column(nullable = false)
 	protected String category;
-
-//	@Column(nullable = false)
-	protected int sellerId;
-
-	protected double availableQty;
-
-//	@Column(nullable = false)
 	protected String identity;	
-
-	@Column(nullable = false)
-	protected String qtyExpressed;
-
+	protected String state;		
+	protected String city;	
+	protected String brand;	
+	protected String qtyExpressed;	
+	
+	protected int sellerId;
+	
+	protected double availableQty;
 	protected double unitPrice;
+	protected double packSize;
+	protected double remainQty;
 
 	/*
 	 *  inserting and fetching BLOB data such as images requires two steps: 
@@ -45,171 +43,157 @@ public class Product {
 	 */
 	@Lob
    // @Column(name = "IMAGE")	
-	protected  byte[] pic1;
-
+	protected byte[] pic1;
 	protected byte[] pic2;
-
 	protected byte[] pic3;
-
 	protected byte[] coa;
-
-	protected double remainQty;
-
-	@Temporal(javax.persistence.TemporalType.DATE)
+	
+	protected Date dateManufacture;	
+	protected Date dateExpire;
+	//@Temporal(javax.persistence.TemporalType.DATE)
 	protected Date updateOn;
-
-	//@Column(nullable = false)
 	protected int loadedBy;
-
-//	@Column(nullable = false)
 	protected boolean approved;
-
-	@Column(nullable = false)
 	protected int approvedBy;	
 	
+	public int getPrId() {
+		return prId;
+	}
+	public void setPrId(int prId) {
+		this.prId = prId;
+	}
 	public String getName() {
 		return name;
 	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
-
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+	}
 	public String getIdentity() {
 		return identity;
 	}
-
 	public void setIdentity(String identity) {
 		this.identity = identity;
 	}
-	
-	public Product() {
-		super();
+	public String getState() {
+		return state;
 	}
-	
+	public void setState(String state) {
+		this.state = state;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+	public String getBrand() {
+		return brand;
+	}
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+	public String getQtyExpressed() {
+		return qtyExpressed;
+	}
+	public void setQtyExpressed(String qtyExpressed) {
+		this.qtyExpressed = qtyExpressed;
+	}
+	public int getSellerId() {
+		return sellerId;
+	}
+	public void setSellerId(int sellerId) {
+		this.sellerId = sellerId;
+	}
+	public double getAvailableQty() {
+		return availableQty;
+	}
+	public void setAvailableQty(double availableQty) {
+		this.availableQty = availableQty;
+	}
+	public double getUnitPrice() {
+		return unitPrice;
+	}
+	public void setUnitPrice(double unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+	public double getPackSize() {
+		return packSize;
+	}
+	public void setPackSize(double packSize) {
+		this.packSize = packSize;
+	}
+	public double getRemainQty() {
+		return remainQty;
+	}
+	public void setRemainQty(double remainQty) {
+		this.remainQty = remainQty;
+	}
 	public byte[] getCoa() {
 		return coa;
 	}
-
 	public void setCoa(byte[] coa) {
 		this.coa = coa;
 	}
-
-	public int getPrId() {
-		return this.prId;
+	public Date getDateManufacture() {
+		return dateManufacture;
 	}
-
-	public String getCategory() {
-		return this.category;
+	public void setDateManufacture(Date dateManufacture) {
+		this.dateManufacture = dateManufacture;
 	}
-
-	public int getSellerId() {
-		return this.sellerId;
+	public Date getDateExpire() {
+		return dateExpire;
 	}
-
-	public double getAvailableQty() {
-		return this.availableQty;
+	public void setDateExpire(Date dateExpire) {
+		this.dateExpire = dateExpire;
 	}
-
-	public String getQtyExpressed() {
-		return this.qtyExpressed;
+	public Date getUpdateOn() {
+		return updateOn;
 	}
-
-	public double getUnitPrice() {
-		return this.unitPrice;
+	public void setUpdateOn(Date updateOn) {
+		this.updateOn = updateOn;
+	}
+	public int getLoadedBy() {
+		return loadedBy;
+	}
+	public void setLoadedBy(int loadedBy) {
+		this.loadedBy = loadedBy;
+	}
+	public boolean isApproved() {
+		return approved;
+	}
+	public void setApproved(boolean approved) {
+		this.approved = approved;
+	}
+	public int getApprovedBy() {
+		return approvedBy;
+	}
+	public void setApprovedBy(int approvedBy) {
+		this.approvedBy = approvedBy;
 	}
 
 	public byte[] getPic1() {
 		return this.pic1;
 	}
-
 	public byte[] getPic2() {
 		return this.pic2;
 	}
-
 	public byte[] getPic3() {
 		return this.pic3;
 	}
-
-
-
-	public double getRemainQty() {
-		return this.remainQty;
-	}
-
-	public Date getUpdateOn() {
-		return this.updateOn;
-	}
-
-	public int getLoadedBy() {
-		return this.loadedBy;
-	}
-
-	public boolean isApproved() {
-		return this.approved;
-	}
-
-	public int getApprovedBy() {
-		return this.approvedBy;
-	}
-
-	
-
-	public void setPrId(int myPrId) {
-		this.prId = myPrId;
-	}
-
-	public void setCategory(String myCategory) {
-		this.category = myCategory;
-	}
-
-	public void setSellerId(int mySellerId) {
-		this.sellerId = mySellerId;
-	}
-
-	public void setAvailableQty(double myAvailableQty) {
-		this.availableQty = myAvailableQty;
-	}
-
-	public void setQtyExpressed(String myQtyExpressed) {
-		this.qtyExpressed = myQtyExpressed;
-	}
-
-	public void setUnitPrice(double myUnitPrice) {
-		this.unitPrice = myUnitPrice;
-	}
-
 	public void setPic1(byte[] myPic1) {
 		this.pic1 = myPic1;
 	}
-
 	public void setPic2(byte[] myPic2) {
 		this.pic2 = myPic2;
 	}
-
 	public void setPic3(byte[] myPic3) {
 		this.pic3 = myPic3;
-	}
-
-	public void setRemainQty(double myRemainQty) {
-		this.remainQty = myRemainQty;
-	}
-
-	public void setUpdateOn(Date myUpdateOn) {
-		this.updateOn = myUpdateOn;
-	}
-
-	public void setLoadedBy(int myLoadedBy) {
-		this.loadedBy = myLoadedBy;
-	}
-
-	public void setApproved(boolean myApproved) {
-		this.approved = myApproved;
-	}
-
-	public void setApprovedBy(int myApprovedBy) {
-		this.approvedBy = myApprovedBy;
 	}
 
 }

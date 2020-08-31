@@ -43,6 +43,7 @@ public class LoginServiceImpl implements LoginService {
 			response.setLoginTime(new Date());
 			response.setRole(users.get(0).getRole());
 			response.setUsername(users.get(0).getName());
+			response.setUserId(users.get(0).getUserId());
 			response.setMessage(Constants.SUCCESS_MESSAGE_LOGIN);
 			logger.info("Completed login method with status as Success");
 		}
