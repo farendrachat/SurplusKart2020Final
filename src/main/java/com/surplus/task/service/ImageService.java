@@ -12,7 +12,7 @@ public interface ImageService {
 
 	ImageModel getImageModel(int productId);
 
-	Iterable<ImageModel> getImageModelByProductId(int productId);
+	List<ImageModel> getImagesByProductId(int productId);
 
 	boolean saveAll(List<ImageModel> mandatoryImages);
 	

@@ -22,6 +22,8 @@ public final class Constants {
 	
 	public static final String PRODUCT_ADDED_SUCCSESSFULLY="Product added successfully";
 	
+	public static final String IMAGES_ADDED_SUCCSESSFULLY="Images added successfully";
+	
 	public static final String USER_NOT_EXIST="User doesn't exist with this id";
 	
 	public final static String USER_DELETED_SUCCESSFULLY="User deleted successfully";

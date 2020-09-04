@@ -54,8 +54,8 @@ public class ImageServiceImpl implements ImageService {
 
 
 	@Override
-	public Iterable<ImageModel> getImageModelByProductId(int productId) {
-		Iterable<ImageModel> list = imageRepository.findImageModelById(productId);
+	public List<ImageModel> getImagesByProductId(int productId) {
+		List<ImageModel> list = imageRepository.findImageModelByProductId(productId);
 		return list;
 	}
 

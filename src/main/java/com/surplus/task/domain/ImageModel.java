@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Table(name="image_model")
 @AllArgsConstructor
-@Data
+//@Data
 @NoArgsConstructor
 @ToString
 public class ImageModel {
@@ -20,7 +20,7 @@ public class ImageModel {
     private Integer id;
     
     @Column(name="productId")
-    private String productId;
+    private Integer productId;
 
     @Column(name = "ImageName")
     private String imageName;
@@ -34,9 +34,62 @@ public class ImageModel {
     @Lob
     @Column(name = "pic")
     private byte[] pic;
+    
+    public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Integer productId) {
+		this.productId = productId;
+	}
+
+	public String getImageName() {
+		return imageName;
+	}
+
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
+	}
+
+	public String getPicType() {
+		return picType;
+	}
+
+	public void setPicType(String picType) {
+		this.picType = picType;
+	}
+
+	public String getImageType() {
+		return imageType;
+	}
+
+	public void setImageType(String imageType) {
+		this.imageType = imageType;
+	}
+
+	public byte[] getPic() {
+		return pic;
+	}
+
+	public void setPic(byte[] pic) {
+		this.pic = pic;
+	}
+
+	
+    
+    public ImageModel() {
+   }
 
 //Custom Construtor
-    public ImageModel(String productId,String imageName, String picType,String imageType, byte[] pic) {
+    public ImageModel(Integer productId,String imageName, String picType,String imageType, byte[] pic) {
     	 this.productId = productId;
     	 this.imageName = imageName;
          this.picType = picType;
