@@ -1,6 +1,7 @@
 package com.surplus.task.controller;
 
 import org.slf4j.LoggerFactory;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.surplus.task.domain.User;
+import com.surplus.task.domain.UserDtls;
 import com.surplus.task.dto.Response;
+import com.surplus.task.dto.UserRequestDTO;
 import com.surplus.task.dto.UserResponse;
 import com.surplus.task.dto.UsersResponse;
 import com.surplus.task.service.UserService;
@@ -32,6 +35,7 @@ public class UserController {
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	
 	private UserService userService;
+	ModelMapper modelMapper = new ModelMapper();
 	
 	UserController(UserService userService)
 	{
@@ -52,15 +56,29 @@ public class UserController {
 	
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/save")
-	public Response saveUser(@RequestBody User user)
+	public Response saveUser(@RequestBody UserRequestDTO userRequestDTO)
 	{	
-		logger.info("Add User request received with user details : "+user);
+		logger.info("Add User request received with user details : "+userRequestDTO);
 		Response response=new Response();
-		User addedUser=userService.save(user);
+		//ModelMapper modelMapper = new ModelMapper();
+		User user = modelMapper.map(userRequestDTO, User.class);
+		UserDtls userDtls = modelMapper.map(userRequestDTO, UserDtls.class);
+//		boolean isUserSaved = userService.saveUser(user);
+//		boolean isUserDtlsSaved = userService.saveUserDtls(userDtls);
+		user.setUserDtls(userDtls);
+		boolean isUserSaved = userService.saveUser(user);		
+		
+		if(isUserSaved)
+		{
 		response.setMessage(Constants.USER_ADDED_SUCCSESSFULLY);
 		response.setStatus(Constants.SUCCESS);
-		response.setUsername(addedUser.getName());
 		logger.info("Add User request completed");
+		}
+		else {
+		response.setMessage(Constants.USER_ALREADY_EXIST);
+		response.setStatus(Constants.FAILURE);
+		logger.info("Add User request completed with failure");			
+		}
 		return response;
 	}
 	
@@ -84,18 +102,22 @@ public class UserController {
 		response.setMessage(Constants.SUCCESS);
 		response.setStatus(Constants.SUCCESS);
 		response.setUser(userService.getUser(id));
+		//response.setUserDtls(userService.getUserDtls(id));
 		logger.info("Get User request completed with User details : "+response.getUser());
 		return response;
 	}
 	
 	@PutMapping(value="/updateUser",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
-	private Response updateUser(@RequestBody User user) {
-		logger.info("Update request received with User details : "+user);
-		Response response=new Response();
+	private Response updateUser(@RequestBody UserRequestDTO userRequestDTO) {
+		logger.info("Update request received with User details : "+userRequestDTO);
+		Response response=new Response();		
+		User user = modelMapper.map(userRequestDTO, User.class);
+		UserDtls userDtls = modelMapper.map(userRequestDTO, UserDtls.class);
+		user.setUserDtls(userDtls);		
 		User addedUser=userService.updateUser(user);
 		response.setMessage(Constants.USER_UPDATED_SUCCESSFULLY);
 		response.setStatus(Constants.SUCCESS);
-		response.setUsername(addedUser.getName());
+		response.setUsername(addedUser.getUserName());
 		logger.info("Update request completed with User details : "+user);
 		return response;
 	}

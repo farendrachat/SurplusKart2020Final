@@ -6,9 +6,9 @@ import com.surplus.task.domain.Product;
 
 
 
-public interface ProductRepository extends JpaRepository<Product,Long>
+public interface ProductRepository extends JpaRepository<Product,Integer>
 {
-	public Product findByPrId(int prId);
+	//public Product findByPrId(int prId);
 	public Iterable<Product> findProductByCategory(String category);
 	public Iterable<Product> findProductByIdentity(String identity);
 }

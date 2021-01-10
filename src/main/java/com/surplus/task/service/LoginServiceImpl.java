@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.surplus.task.controller.LoginController;
 import com.surplus.task.domain.User;
 import com.surplus.task.dto.LoginRequest;
 import com.surplus.task.dto.LoginResponse;
@@ -33,7 +32,7 @@ public class LoginServiceImpl implements LoginService {
 	public LoginResponse login(LoginRequest loginRequest) {
 		logger.info("Executing login method with username : " + loginRequest.getUsername());
 		LoginResponse response = null;
-		List<User> users = userRepository.findByNameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
+		List<User> users = userRepository.findByUserNameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
 		if (null == users || users.isEmpty()) {
 			logger.warn("No user found with given details for username : " + loginRequest.getUsername());
 			throw new InvalidCredentialsException(Constants.NO_USER_FOUND);
@@ -42,7 +41,7 @@ public class LoginServiceImpl implements LoginService {
 			response.setStatus(Constants.SUCCESS);
 			response.setLoginTime(new Date());
 			response.setRole(users.get(0).getRole());
-			response.setUsername(users.get(0).getName());
+			response.setUserName(users.get(0).getUserName());
 			response.setUserId(users.get(0).getUserId());
 			response.setMessage(Constants.SUCCESS_MESSAGE_LOGIN);
 			logger.info("Completed login method with status as Success");

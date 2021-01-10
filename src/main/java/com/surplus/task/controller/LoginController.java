@@ -18,7 +18,7 @@ import io.swagger.annotations.Api;
 
 @RestController
 @CrossOrigin("http://localhost:4200")
-@RequestMapping("/api/product")
+@RequestMapping("/api/security")
 @Api(value="Surplus Kart", description="Operations pertaining to products in Application") 
 public class LoginController {
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);

@@ -4,10 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import javax.persistence.Lob;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +27,6 @@ import com.surplus.task.dto.ImagesResponse;
 import com.surplus.task.dto.ProductResponse;
 import com.surplus.task.dto.ProductsResponse;
 import com.surplus.task.dto.Response;
-import com.surplus.task.dto.UserResponse;
 import com.surplus.task.service.ImageService;
 import com.surplus.task.service.ProductService;
 import com.surplus.task.utils.Constants;
@@ -37,8 +35,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 @RestController
@@ -104,23 +100,6 @@ public class ProductController {
 		return response;
 	}
 	
-//	@ApiOperation(value = "Save/Update image", response = Boolean.class)
-//	@CrossOrigin
-//	@PostMapping(path="/saveImage",consumes=MediaType.MULTIPART_FORM_DATA_VALUE)	   
-//	public boolean saveImage(@RequestParam("pic1") MultipartFile pic1)
-//	{	
-//		ImageModel savedImage = null;
-//		Boolean success;
-//		ImageModel img=null;
-//		try {
-//			img = new ImageModel( pic1.getOriginalFilename(),pic1.getContentType(),pic1.getBytes() );
-//		} catch (IOException e) {
-//	             System.out.println("IOException is ::"+e);
-//		}
-//        savedImage = imageService.save(img);
-//        System.out.println("Image saved");
-//        return true;
-//	}
 	
 	@Transactional
 	@ApiOperation(value = "Save/Update array of images", response = Boolean.class)
@@ -214,60 +193,10 @@ public class ProductController {
 		return response;
 	}
 	
-//	@GetMapping(value="/getImages/{prId}",produces = MediaType.APPLICATION_JSON_VALUE)
-//	public ImagesResponse getImages(@PathVariable Integer prId) {
-//		logger.info("Get Images request received for product id : "+prId);
-//		ImagesResponse response=new ImagesResponse();
-//		response.setMessage(Constants.SUCCESS);
-//		response.setStatus(Constants.SUCCESS);
-//		response.setImages(imageService.getImagesByProductId(prId));
-//		logger.info("Get Images request completed");
-//		return response;
-//	}
-/*	@GetMapping(value="/getImages/{prId}")
-	public ImageModel getImages(@PathVariable Integer prId) {
-		logger.info("Get Images request received for product id : "+prId);
-//		ImagesResponse response=new ImagesResponse();
-//		response.setMessage(Constants.SUCCESS);
-//		response.setStatus(Constants.SUCCESS);
-//		response.setImages(imageService.getImagesByProductId(prId));
-		final List<ImageModel> retrievedImage  = imageService.getImagesByProductId(prId);
-	    ImageModel img = new ImageModel(retrievedImage.get(0).getProductId(),retrievedImage.get(0).getImageName(),
-	    		retrievedImage.get(0).getPicType(),retrievedImage.get(0).getImageType(),retrievedImage.get(0).getPic());
-		logger.info("Get Images request completed");		
-		//return imageService.getImagesByProductId(prId);
-	//	List<byte[]> retrievedImage1  = new ArrayList<byte[]>(); 
-//		retrievedImage1.add(retrievedImage.get(0).getPic());
-//		return retrievedImage1;
-		return img;
-	}*/
-	
-/*	@GetMapping(value="/getImages/{prId}")
-	public List<ImageModel> getImages(@PathVariable Integer prId) {
-		logger.info("Get Images request received for product id : "+prId);
-//		ImagesResponse response=new ImagesResponse();
-//		response.setMessage(Constants.SUCCESS);
-//		response.setStatus(Constants.SUCCESS);
-//		response.setImages(imageService.getImagesByProductId(prId));
-		final List<ImageModel> retrievedImage  = imageService.getImagesByProductId(prId);
-	    ImageModel img = new ImageModel(retrievedImage.get(0).getProductId(),retrievedImage.get(0).getImageName(),
-	    		retrievedImage.get(0).getPicType(),retrievedImage.get(0).getImageType(),retrievedImage.get(0).getPic());
-		logger.info("Get Images request completed");		
-		//return imageService.getImagesByProductId(prId);
-		List<ImageModel> retrievedImages  = new ArrayList<ImageModel>(); 
-		retrievedImages.add(img);
-//		return retrievedImage1;
-		return retrievedImages;
-	}*/
-	
 	@GetMapping(value="/getImages/{prId}")
 	public List<ImageModel> getImages(@PathVariable Integer prId) {
 		logger.info("Get Images request received for product id : "+prId);
 		List<ImageModel> imageList  = new ArrayList<ImageModel>(); 
-//		ImagesResponse response=new ImagesResponse();
-//		response.setMessage(Constants.SUCCESS);
-//		response.setStatus(Constants.SUCCESS);
-//		response.setImages(imageService.getImagesByProductId(prId));
 		final List<ImageModel> retrievedImage  = imageService.getImagesByProductId(prId);
 		for(int count=0;count<retrievedImage.size();count++)
 		{
@@ -275,11 +204,7 @@ public class ProductController {
 	    		retrievedImage.get(count).getPicType(),retrievedImage.get(count).getImageType(),retrievedImage.get(count).getPic());
 	    imageList.add(imgModel);
 		}
-		logger.info("Get Images request completed");		
-		//return imageService.getImagesByProductId(prId);
-		//List<ImageModel> retrievedImages  = new ArrayList<ImageModel>(); 
-		//retrievedImages.add(img);
-//		return retrievedImage1;
+		logger.info("Get Images request completed");
 		return imageList;
 	}
 

@@ -29,6 +29,7 @@ public class Product {
 	protected String qtyExpressed;	
 	
 	protected int sellerId;
+	protected int buyerId;	
 	
 	protected double availableQty;
 	protected double unitPrice;
@@ -56,6 +57,12 @@ public class Product {
 	protected boolean approved;
 	protected int approvedBy;	
 	
+	public int getBuyerId() {
+		return buyerId;
+	}
+	public void setBuyerId(int buyerId) {
+		this.buyerId = buyerId;
+	}	
 	public int getPrId() {
 		return prId;
 	}

@@ -9,8 +9,8 @@ import com.surplus.task.domain.User;
 public interface UserRepository extends JpaRepository<User,Integer>
 {
 	public User findByUserId(int userId);
-	public List<User> findByNameAndPassword(String name,String password);	
-	List<User> findByName(String name);
+	public List<User> findByUserNameAndPassword(String userName,String password);	
+	List<User> findByUserName(String userName);
 	
 
 }

@@ -6,6 +6,7 @@ import com.surplus.task.domain.Product;
 import com.surplus.task.repository.ProductRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +29,8 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	public Product getProduct(int prId) {
-		Product product = this.productRepository.findByPrId(prId);
-		return product;
+		Optional<Product> product = this.productRepository.findById(prId);
+		return product.get() ;
 	}
 	
 	/*
@@ -50,11 +51,11 @@ public class ProductServiceImpl implements ProductService {
 	}	
 	@Override
 	public boolean deleteProduct(int prId){
-		Product product = null;
+		Optional<Product> product = null;
 		boolean isDeleted = true;
 		try{
-		product = this.productRepository.findByPrId(prId);
-		 this.productRepository.delete(product);
+		product = this.productRepository.findById(prId);
+		 this.productRepository.delete(product.get());
 		}catch(Exception ex)
 		{
 			isDeleted = false;

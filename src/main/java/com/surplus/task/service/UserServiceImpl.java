@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import com.surplus.task.domain.User;
+import com.surplus.task.domain.UserDtls;
+import com.surplus.task.repository.UserDtlsRepository;
 import com.surplus.task.repository.UserRepository;
 import com.surplus.task.utils.Constants;
 import com.surplus.task.utils.NoDataFoundException;
@@ -17,21 +19,38 @@ import com.surplus.task.utils.UserAlreadyExistException;
 public class UserServiceImpl implements UserService {
 	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 	private UserRepository userRepository; 
+	private UserDtlsRepository userDtlsRepository; 
 	
-	UserServiceImpl(UserRepository userRepository){
-		this.userRepository = userRepository;		
+	UserServiceImpl(UserRepository userRepository,UserDtlsRepository userDtlsRepository){
+		this.userRepository = userRepository;	
+		this.userDtlsRepository = userDtlsRepository;
 	}
 
 	@Override
-	public User save(User user) {
+	public boolean saveUser(User user) {
 		logger.info("Executing add method with User details : " + user);
-		List<User> users = userRepository.findByName(user.getName());
+		List<User> users = userRepository.findByUserName(user.getUserName());
 		if (users.size() > 0) {
-			logger.warn("User already exist with name : " + user.getName());
+			logger.warn("User already exist with name : " + user.getUserName());
+			throw new UserAlreadyExistException(Constants.USER_ALREADY_EXIST);
+		} else {			
+			userRepository.save(user);
+			logger.info("User added successfully with details : " + user);
+			return true;
+		}
+	}	
+	
+	@Override
+	public boolean saveUserDtls(UserDtls userDtls) {
+		logger.info("Executing add method with User details : " + userDtls);
+		UserDtls userDtlsTemp = userDtlsRepository.findByUserName(userDtls.getUserName());
+		if (userDtlsTemp != null) {
+			logger.warn("User already exist with name : " + userDtls.getUserName());
 			throw new UserAlreadyExistException(Constants.USER_ALREADY_EXIST);
 		} else {
-			logger.info("User added successfully with details : " + user);
-			return userRepository.save(user);
+			logger.info("User added successfully with details : " + userDtls);
+			 userDtlsRepository.save(userDtls);
+			 return true;
 		}
 	}	
 	public boolean deleteUser(int userId){
@@ -59,6 +78,18 @@ public class UserServiceImpl implements UserService {
 			throw new NoDataFoundException(Constants.NO_DATA_AVALIABLE);
 		}
 	}
+	
+	@Override
+	public UserDtls getUserDtls(int userDtlId) {		
+		logger.info("Executing getUserDtls method with id : " + userDtlId);
+		Optional<UserDtls> userDtls = userDtlsRepository.findByUserDtlId(userDtlId);
+		if (userDtls.isPresent())
+			return userDtls.get();
+		else {
+			logger.warn("No UserDtls found with userid : " + userDtlId);
+			throw new NoDataFoundException(Constants.NO_DATA_AVALIABLE);
+		}
+	}
 
 	@Override
 	public List<User> getAllUsers() {
@@ -75,17 +106,19 @@ public class UserServiceImpl implements UserService {
 	
 	public User updateUser(User user) {
 		logger.info("Executing update meothod with User details : " + user);
-		List<User> users = userRepository.findByName(user.getName());
+		List<User> users = userRepository.findByUserName(user.getUserName());
 		if (users.size() > 0) {
 			User savedUser = users.get(0);
-			savedUser.setPassword(user.getPassword());
-			savedUser.setRole(user.getRole());
-			savedUser.setName(user.getName());
-			userRepository.save(savedUser);
+			user.setUserId(savedUser.getUserId());
+			user.getUserDtls().setUserDtlId(savedUser.getUserDtls().getUserDtlId());
+//			savedUser.setPassword(user.getPassword());
+//			savedUser.setRole(user.getRole());
+//			savedUser.setUserName(user.getUserName());
+			userRepository.save(user);
 			logger.info("User details with updated successfully with User details : " + user);
 			return user;
 		} else {
-			logger.warn("No User found with name : " + user.getName());
+			logger.warn("No User found with name : " + user.getUserName());
 			throw new NoDataFoundException(Constants.USER_NOT_EXIST);
 		}
 	}

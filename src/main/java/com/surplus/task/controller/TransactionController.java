@@ -1,5 +1,6 @@
 package com.surplus.task.controller;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,8 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.surplus.task.domain.Product;
 import com.surplus.task.domain.Transaction;
+import com.surplus.task.dto.ProductResponse;
 import com.surplus.task.service.TransactionService;
+import com.surplus.task.utils.Constants;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -53,12 +57,40 @@ public class TransactionController {
 		return listTransaction;
 	}
 	
-	@ApiOperation(value = "Save/Update transaction.If id is passed its update, else its save with new id.", response = Boolean.class)
+	@ApiOperation(value = "Buy transaction.Transaction initiated with the Buy process.", response = Boolean.class)
 	@CrossOrigin
-	@PostMapping("/save")
-	public boolean saveTransaction(@RequestBody Transaction transaction)
+	@PostMapping("/buy")
+	public ProductResponse buyTransaction(@RequestBody Product product)
+	{	
+		//logger.info("Buy transaction request received with Product details : "+product);
+		ProductResponse response=new ProductResponse();
+		Transaction transaction = new Transaction();
+		transaction.setBuyerId(product.getBuyerId());
+		transaction.setSellerId(product.getSellerId());
+		//transaction.setQuantity(product.getb );
+		
+		//Product buyProduct=transactionService.save(product);
+		response.setMessage(Constants.PRODUCT_ADDED_SUCCSESSFULLY);
+		response.setStatus(Constants.SUCCESS);
+		//response.setProduct(addedProduct);
+		//logger.info("Add new Product request completed with Product details : "+addedProduct);
+		return response;
+		
+	}
+	
+	@ApiOperation(value = "Save", response = Boolean.class)
+	@CrossOrigin
+	@PostMapping(path="/save",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+	public ProductResponse saveProduct(@RequestBody Product product)
 	{		
-		return transactionService.save(transaction);
+		//logger.info("Add new Product request received with Product details : "+product);
+		ProductResponse response=new ProductResponse();
+		//Product addedProduct=productService.save(product);
+		response.setMessage(Constants.PRODUCT_ADDED_SUCCSESSFULLY);
+		response.setStatus(Constants.SUCCESS);
+		//response.setProduct(addedProduct);
+		//logger.info("Add new Product request completed with Product details : "+addedProduct);
+		return response;
 	}
 	
 	@ApiOperation(value = "Delete Transaction by transaction id", response = Boolean.class)

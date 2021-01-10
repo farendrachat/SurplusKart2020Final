@@ -1,8 +1,12 @@
 package com.surplus.task.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
+import com.surplus.task.domain.Product;
 import com.surplus.task.domain.Transaction;
+import com.surplus.task.repository.ProductRepository;
 import com.surplus.task.repository.TransactionRepository;
 
 
@@ -11,6 +15,7 @@ import com.surplus.task.repository.TransactionRepository;
 public class TransactionServiceImpl implements TransactionService {
 	
 	private TransactionRepository transactionRepository; 
+	private ProductRepository productRepository;
 	
 	TransactionServiceImpl(TransactionRepository transactionRepository){
 		this.transactionRepository = transactionRepository;		
@@ -23,7 +28,8 @@ public class TransactionServiceImpl implements TransactionService {
 
 	@Override
 	public boolean save(Transaction transaction) {
-		boolean isSaved = true;
+		boolean isSaved = false;
+		boolean isQuantityUpdated = false;
 		try{
 		this.transactionRepository.save(transaction);		
 		}catch(Exception ex)
@@ -31,8 +37,28 @@ public class TransactionServiceImpl implements TransactionService {
 			isSaved = false;
 			System.out.println("exception in TransactionServiceImpl is :"+ex.getMessage());
 		}
-		return isSaved;
-	}	
+		
+		if(isSaved)
+		{
+			isQuantityUpdated = reduceQuantity(transaction);
+		}
+		
+		
+		return isQuantityUpdated;
+	}
+	
+	public boolean reduceQuantity(Transaction transaction)
+	{
+		
+		Optional<Product> product = productRepository.findById(transaction.getProductId());
+		if(product.isPresent())
+		{
+			product.get().setAvailableQty(product.get().getAvailableQty()-transaction.getQuantity());
+		}
+		
+		productRepository.save(product.get());		
+		return true;
+	}
 	public boolean deleteTransaction(int transId){
 		Transaction transaction = null;
 		boolean isDelete = true;

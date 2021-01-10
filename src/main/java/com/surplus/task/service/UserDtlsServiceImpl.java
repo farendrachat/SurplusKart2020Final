@@ -1,5 +1,7 @@
 package com.surplus.task.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.surplus.task.domain.UserDtls;
@@ -34,11 +36,14 @@ public class UserDtlsServiceImpl implements UserDtlsService {
 		return isSaved;
 	}	
 	public boolean deleteUserDtls(int userDtlId){
-		UserDtls userDtls = null;
+		Optional<UserDtls> userDtls = null;
 		boolean isDelete = true;
 		try{
 		userDtls = userDtlsRepository.findByUserDtlId(userDtlId);
-		 this.userDtlsRepository.delete(userDtls);
+		if(userDtls.isPresent())
+		{
+		 this.userDtlsRepository.delete(userDtls.get());
+		}
 		}catch(Exception ex)
 		{
 			isDelete = false;
@@ -48,8 +53,8 @@ public class UserDtlsServiceImpl implements UserDtlsService {
 	}
 
 	@Override
-	public UserDtls getUserDtls(int userDtlsId) {
-		UserDtls userDtls =  userDtlsRepository.findByUserDtlId(userDtlsId);
+	public Optional<UserDtls> getUserDtls(int userDtlsId) {
+		Optional<UserDtls> userDtls =  userDtlsRepository.findByUserDtlId(userDtlsId);
 		return userDtls ;
 	}
 }

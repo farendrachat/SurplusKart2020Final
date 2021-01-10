@@ -1,10 +1,16 @@
 package com.surplus.task.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+
+import lombok.Data;
 
 /*
  * SQL USED:
@@ -14,6 +20,7 @@ import javax.persistence.Id;
  * GRANT ALL PRIVILEGES ON *.* TO 'sk_admin'@'localhost' WITH GRANT OPTION;
  */
 @Entity
+@Data
 public class User {
 
 	@Id
@@ -22,16 +29,20 @@ public class User {
 	protected int userId;
 
 	@Column(nullable = false)
-	protected String name;
+	protected String userName;
 
 	@Column(nullable = false)
 	protected String password;
 
 	@Column(nullable = false)
 	protected String role;
-	/*@OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+	
+	//@OneToOne(fetch = FetchType.LAZY,cascade=CascadeType.ALL) GOT ERROR when server send res bk to ui : No serializer found for class org.hibernate.proxy.pojo.javassist.JavassistLazyInitializer and no properties discovered to create BeanSerializer
+	@OneToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="userDtlId")
 	protected UserDtls userDtls;
-
+	
+	/*
 	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
 	protected UserAdministration userAdministration;*/
 
@@ -105,21 +116,7 @@ public class User {
 		}
 	}*/
 	
-	public String getPassword() {
-		return password;
-	}
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public int getUserId() {
-		return this.userId;
-	}
-
-	public String getName() {
-		return this.name;
-	}
 
 
 
@@ -163,13 +160,7 @@ public class User {
 		return this.statutoryInfo;
 	}*/
 
-	public void setUserId(int myUserId) {
-		this.userId = myUserId;
-	}
 
-	public void setName(String myName) {
-		this.name = myName;
-	}
 
 
 
@@ -185,23 +176,7 @@ public class User {
 
 	}*/
 
-	public void unsetUserId() {
-		this.userId = 0;
-	}
-
-	public void unsetName() {
-		this.name = "";
-	}
-
 	
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
-
 	/*public void unsetUserDtls() {
 		if (this.userDtls == null)
 			return;
