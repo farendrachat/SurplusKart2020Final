@@ -1,11 +1,13 @@
 package com.surplus.task.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.surplus.task.domain.Product;
 import com.surplus.task.domain.Transaction;
+import com.surplus.task.dto.TransactionsResponse;
 import com.surplus.task.repository.ProductRepository;
 import com.surplus.task.repository.TransactionRepository;
 
@@ -17,8 +19,9 @@ public class TransactionServiceImpl implements TransactionService {
 	private TransactionRepository transactionRepository; 
 	private ProductRepository productRepository;
 	
-	TransactionServiceImpl(TransactionRepository transactionRepository){
+	TransactionServiceImpl(TransactionRepository transactionRepository,ProductRepository productRepository){
 		this.transactionRepository = transactionRepository;		
+		this.productRepository = productRepository;
 	}
 
 	@Override
@@ -31,18 +34,16 @@ public class TransactionServiceImpl implements TransactionService {
 		boolean isSaved = false;
 		boolean isQuantityUpdated = false;
 		try{
-		this.transactionRepository.save(transaction);		
+		if(this.transactionRepository.save(transaction)!=null);	
+		{
+			isQuantityUpdated = reduceQuantity(transaction);
+			isSaved = true;
+		}
 		}catch(Exception ex)
 		{
 			isSaved = false;
 			System.out.println("exception in TransactionServiceImpl is :"+ex.getMessage());
 		}
-		
-		if(isSaved)
-		{
-			isQuantityUpdated = reduceQuantity(transaction);
-		}
-		
 		
 		return isQuantityUpdated;
 	}
@@ -50,21 +51,22 @@ public class TransactionServiceImpl implements TransactionService {
 	public boolean reduceQuantity(Transaction transaction)
 	{
 		
-		Optional<Product> product = productRepository.findById(transaction.getProductId());
+		Optional<Product> product = productRepository.findProductByPrId(transaction.getPrId());
 		if(product.isPresent())
 		{
-			product.get().setAvailableQty(product.get().getAvailableQty()-transaction.getQuantity());
+			product.get().setAvailablePackets(product.get().getAvailablePackets()-transaction.getBuyPacketQty());
 		}
 		
 		productRepository.save(product.get());		
 		return true;
 	}
 	public boolean deleteTransaction(int transId){
-		Transaction transaction = null;
+		Optional<Transaction> transaction = null;
 		boolean isDelete = true;
 		try{
-		transaction = this.transactionRepository.findByTransId(transId);
-		 this.transactionRepository.delete(transaction);
+		transaction = this.transactionRepository.findById(transId);
+		if(transaction.isPresent()){
+		this.transactionRepository.delete(transaction.get());}		
 		}catch(Exception ex)
 		{
 			isDelete = false;
@@ -75,13 +77,23 @@ public class TransactionServiceImpl implements TransactionService {
 
 	@Override
 	public Transaction getTransaction(int transId) {
-		Transaction transaction = transactionRepository.findByTransId(transId);
-		return transaction;
+		Optional<Transaction> transaction = transactionRepository.findById(transId);
+		return transaction.get();
 	}
 
 	@Override
 	public Iterable<Transaction> getTransactionByProductId(int productId) {
-		Iterable<Transaction> transactions = transactionRepository.findByProductId(productId);
+		Iterable<Transaction> transactions = transactionRepository.findByPrId(productId);
 		return transactions;
+	}
+
+	@Override
+	public List<Transaction> getTransactionsByBuyerId(int buyerId) {		
+		return transactionRepository.findByBuyerId(buyerId);
+	}
+
+	@Override
+	public List<Transaction> getTransactionsBySellerId(int sellerId) {
+		return transactionRepository.findBySellerId(sellerId);
 	}
 }

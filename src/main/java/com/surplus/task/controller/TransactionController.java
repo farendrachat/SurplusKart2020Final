@@ -11,9 +11,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
+import org.modelmapper.ModelMapper;
+
 import com.surplus.task.domain.Product;
 import com.surplus.task.domain.Transaction;
+import com.surplus.task.domain.User;
 import com.surplus.task.dto.ProductResponse;
+import com.surplus.task.dto.TransactionRequest;
+import com.surplus.task.dto.TransactionResponse;
+import com.surplus.task.dto.TransactionsResponse;
 import com.surplus.task.service.TransactionService;
 import com.surplus.task.utils.Constants;
 
@@ -27,6 +35,7 @@ import io.swagger.annotations.ApiOperation;
 public class TransactionController {
 	
 	private TransactionService transactionService;
+	ModelMapper modelMapper = new ModelMapper();
 	
 	TransactionController(TransactionService transactionService)
 	{
@@ -60,17 +69,19 @@ public class TransactionController {
 	@ApiOperation(value = "Buy transaction.Transaction initiated with the Buy process.", response = Boolean.class)
 	@CrossOrigin
 	@PostMapping("/buy")
-	public ProductResponse buyTransaction(@RequestBody Product product)
-	{	
+	public TransactionResponse buyTransaction(@RequestBody TransactionRequest transactionRequest)
+	{
+		boolean isTransSuccessful;
+		Transaction transaction = modelMapper.map(transactionRequest, Transaction.class);
 		//logger.info("Buy transaction request received with Product details : "+product);
-		ProductResponse response=new ProductResponse();
-		Transaction transaction = new Transaction();
-		transaction.setBuyerId(product.getBuyerId());
-		transaction.setSellerId(product.getSellerId());
+		TransactionResponse response=new TransactionResponse();
+//		Transaction transaction = new Transaction();
+//		transaction.setBuyerId(product.getBuyerId());
+//		transaction.setSellerId(product.getSellerId());
 		//transaction.setQuantity(product.getb );
 		
-		//Product buyProduct=transactionService.save(product);
-		response.setMessage(Constants.PRODUCT_ADDED_SUCCSESSFULLY);
+		isTransSuccessful=transactionService.save(transaction);
+		response.setMessage(Constants.TRANSACTION_ADDED_SUCCSESSFULLY);
 		response.setStatus(Constants.SUCCESS);
 		//response.setProduct(addedProduct);
 		//logger.info("Add new Product request completed with Product details : "+addedProduct);
@@ -99,6 +110,48 @@ public class TransactionController {
 	public boolean deleteTransaction(@RequestParam(value="transactionId",required=true) int transactionId)
 	{		
 		return transactionService.deleteTransaction(transactionId);
+	}
+	
+	@ApiOperation(value = "Get list of transaction for user id listed datewise asc", response = Transaction.class)
+	@GetMapping("/getBuyerTransactions/{buyerId}")
+	public TransactionsResponse getTransactionByBuyerId(@PathVariable int buyerId)
+	{
+		TransactionsResponse transactionsResponse = new TransactionsResponse();
+		List<Transaction> lstTransactions = null;
+		lstTransactions = transactionService.getTransactionsByBuyerId(buyerId);
+		if(lstTransactions != null && lstTransactions.size()>0)
+		{
+		transactionsResponse.setMessage(Constants.SUCCESS);
+		transactionsResponse.setStatus(Constants.SUCCESS);
+		transactionsResponse.setTransactions(lstTransactions);
+		}
+		else
+		{
+			transactionsResponse.setMessage(Constants.FAILURE);
+			transactionsResponse.setStatus(Constants.FAILURE);			
+		}
+		return transactionsResponse;
+	}
+	
+	@ApiOperation(value = "Get list of transaction for user id listed datewise asc", response = Transaction.class)
+	@GetMapping("/getSellerTransactions/{sellerId}")
+	public TransactionsResponse getTransactionBySellerId(@PathVariable int sellerId)
+	{
+		TransactionsResponse transactionsResponse = new TransactionsResponse();
+		List<Transaction> lstTransactions = null;
+		lstTransactions = transactionService.getTransactionsBySellerId(sellerId);
+		if(lstTransactions != null && lstTransactions.size()>0)
+		{
+		transactionsResponse.setMessage(Constants.SUCCESS);
+		transactionsResponse.setStatus(Constants.SUCCESS);
+		transactionsResponse.setTransactions(lstTransactions);
+		}
+		else
+		{
+			transactionsResponse.setMessage(Constants.FAILURE);
+			transactionsResponse.setStatus(Constants.FAILURE);			
+		}
+		return transactionsResponse;
 	}
 
 }

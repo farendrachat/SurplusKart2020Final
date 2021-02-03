@@ -5,7 +5,7 @@ import com.surplus.task.domain.Product;
 import lombok.Data;
 
 @Data
-public class ProductResponse {
+public class TransactionResponse {
 	
 	private String status;	
 	private String message;	

@@ -19,7 +19,7 @@ public class ImageModel {
     @GeneratedValue
     private Integer id;
     
-    @Column(name="productId")
+    @Column(name="prId")
     private Integer productId;
 
     @Column(name = "ImageName")
@@ -85,8 +85,8 @@ public class ImageModel {
 
 	
     
-    public ImageModel() {
-   }
+//    public ImageModel() {
+//   }
 
 //Custom Construtor
     public ImageModel(Integer productId,String imageName, String picType,String imageType, byte[] pic) {

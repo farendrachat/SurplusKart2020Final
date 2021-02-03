@@ -1,13 +1,14 @@
 package com.surplus.task.domain;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+
+import org.springframework.data.annotation.CreatedDate;
 
 import lombok.Data;
 
@@ -16,12 +17,13 @@ import lombok.Data;
 public class Transaction {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(nullable = false)
 	protected int transId;
 
 
 	@Column(nullable = false)
-	protected int productId;
+	protected int prId;
 
 	@Column(nullable = false)
 	protected int sellerId;
@@ -29,40 +31,45 @@ public class Transaction {
 	@Column(nullable = false)
 	protected int buyerId;
 
-	protected double quantity;
+	protected int buyPacketQty;
 
-	protected double totalPrice;
+	protected double estimatedPrice;
 	
-	@Temporal(TemporalType.DATE)
-	protected Date updatedOn;
+	@Column
+	protected LocalDate updatedOn;
+	
+	@CreatedDate
+	@Column
+	private LocalDate startDate;
 
-	@Column(nullable = false)
+	
+	@Column(columnDefinition = "boolean default false")
 	protected boolean buyerMoneyReceived;
 	
-	//@Temporal(TemporalType.DATE)
-	protected String dtBuyerMoneyReceived;
+	@Column
+	protected LocalDate dtBuyerMoneyReceived;
 
-	@Column(nullable = false)
+	@Column(columnDefinition = "boolean default false")
 	protected boolean buyerProdReceived;
 	
-	//@Temporal(TemporalType.DATE)
-	protected String dtBuyerProdReceived;
+	@Column
+	protected LocalDate dtBuyerProdReceived;
 
-	@Column(nullable = false)
+	@Column(columnDefinition = "boolean default false")
 	protected boolean sellerMoneyReached;
 	
-	//@Temporal(TemporalType.DATE)
-	protected String dtSellerMoneyReached;
+	@Column
+	protected LocalDate dtSellerMoneyReached;
 
-	@Column(nullable = false)
+	@Column(columnDefinition = "boolean default false")
 	protected boolean completeStatus;
 	
-	//@Temporal(TemporalType.DATE)
-	protected String dtCompleteStatus;
+	@Column
+	protected LocalDate dtCompleteStatus;
 
-	@Column(nullable = false)
-	protected boolean completedBy;
+	@Column
+	protected int completedBy;
 
-	@Column(nullable = false)
+	@Column(columnDefinition = "varchar(255) default 'IN PROGRESS'")
 	protected String milestone;	
 }

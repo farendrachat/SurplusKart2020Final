@@ -1,15 +1,13 @@
 package com.surplus.task.dto;
 
 import java.util.List;
-
-import com.surplus.task.domain.Product;
-
+import com.surplus.task.domain.Transaction;
 import lombok.Data;
 
 @Data
-public class ProductsResponse {
+public class TransactionsResponse {
 	
 	private String status;	
 	private String message;	
-	List<Product> products;
+	List<Transaction> Transactions;
 }

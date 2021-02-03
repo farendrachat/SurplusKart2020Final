@@ -50,7 +50,7 @@ public class TaskApplication {
 			}			
 		};
 	}*/
-	@Bean
+/*	@Bean
 	CommandLineRunner runner(MessageService messageService )
 	{
 		
@@ -64,5 +64,5 @@ public class TaskApplication {
 				System.out.println("exception thrown is :"+ex.getMessage());
 			}			
 		};
-}
+}*/
 }
