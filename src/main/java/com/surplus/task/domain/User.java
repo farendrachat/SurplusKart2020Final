@@ -3,12 +3,16 @@ package com.surplus.task.domain;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+
+import com.surplus.task.utils.EnumUserRoles;
 
 import lombok.Data;
 
@@ -34,8 +38,8 @@ public class User {
 	@Column(nullable = false)
 	protected String password;
 
-	@Column(nullable = false)
-	protected String role;
+	@Enumerated(EnumType.STRING)
+	protected EnumUserRoles role;
 	
 	//@OneToOne(fetch = FetchType.LAZY,cascade=CascadeType.ALL) GOT ERROR when server send res bk to ui : No serializer found for class org.hibernate.proxy.pojo.javassist.JavassistLazyInitializer and no properties discovered to create BeanSerializer
 	@OneToOne(cascade=CascadeType.ALL)

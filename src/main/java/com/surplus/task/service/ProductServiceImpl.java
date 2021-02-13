@@ -77,4 +77,16 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 
+	@Override
+	public List<Product> getProductBySellerId(int sellerId) {
+		return productRepository.findProductBySellerId(sellerId);
+	}
+
+
+	@Override
+	public List<Product> getProductByBuyerId(int buyerId) {
+		return productRepository.findProductByBuyerId(buyerId);
+	}
+
+
 }

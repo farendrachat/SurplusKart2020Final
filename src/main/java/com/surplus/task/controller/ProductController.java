@@ -77,12 +77,40 @@ public class ProductController {
 		return response;
 	}
 	
-	@ApiOperation(value = "Get product from product id", response = Product.class)
-	@GetMapping("/getProduct/{productId}")
-	public Product getProduct(@PathVariable int productId)
+	@ApiOperation(value = "Get product for seller id", response = Product.class)
+	@GetMapping("/getProductForSeller/{sellerId}")
+	public ProductsResponse getProductForSeller(@PathVariable int sellerId)
 	{
-		Product product = productService.getProduct(productId) ;
-		return product;
+		List<Product> lstProduct = productService.getProductBySellerId(sellerId) ;
+		ProductsResponse response=new ProductsResponse();
+		if(lstProduct!=null && lstProduct.size()>0) {
+		response.setMessage(Constants.SUCCESS);
+		response.setStatus(Constants.SUCCESS);
+		response.setProducts(lstProduct);
+		}
+		else {
+			response.setMessage(Constants.PRODUCT_NOT_FOUND);
+			response.setStatus(Constants.FAILURE);			
+		}		
+		return response;
+	}
+	
+	@ApiOperation(value = "Get product for buyer id", response = Product.class)
+	@GetMapping("/getProductForBuyer/{buyerId}")
+	public ProductsResponse getProductForBuyer(@PathVariable int buyerId)
+	{
+		List<Product> lstProduct = productService.getProductByBuyerId(buyerId) ;
+		ProductsResponse response=new ProductsResponse();
+		if(lstProduct!=null && lstProduct.size()>0) {
+		response.setMessage(Constants.SUCCESS);
+		response.setStatus(Constants.SUCCESS);
+		response.setProducts(lstProduct);
+		}
+		else {
+			response.setMessage(Constants.PRODUCT_NOT_FOUND);
+			response.setStatus(Constants.FAILURE);			
+		}		
+		return response;
 	}
 	
 	@ApiOperation(value = "Save", response = Boolean.class)

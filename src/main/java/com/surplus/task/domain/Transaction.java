@@ -4,11 +4,15 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import org.springframework.data.annotation.CreatedDate;
+
+import com.surplus.task.utils.EnumTransactionStatus;
 
 import lombok.Data;
 
@@ -70,6 +74,6 @@ public class Transaction {
 	@Column
 	protected int completedBy;
 
-	@Column(columnDefinition = "varchar(255) default 'IN PROGRESS'")
-	protected String milestone;	
+	@Enumerated(EnumType.STRING)
+	protected EnumTransactionStatus transactionStatus  ;	
 }

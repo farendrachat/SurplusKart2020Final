@@ -1,18 +1,8 @@
 package com.surplus.task;
 
-import java.time.LocalDate;
-import java.time.Period;
-
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
-
-import com.surplus.task.domain.Message;
-import com.surplus.task.domain.Task;
-import com.surplus.task.service.MessageService;
-import com.surplus.task.service.TaskService;
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 

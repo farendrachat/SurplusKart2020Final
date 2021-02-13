@@ -24,6 +24,7 @@ import com.surplus.task.dto.TransactionResponse;
 import com.surplus.task.dto.TransactionsResponse;
 import com.surplus.task.service.TransactionService;
 import com.surplus.task.utils.Constants;
+import com.surplus.task.utils.EnumTransactionStatus;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -59,11 +60,24 @@ public class TransactionController {
 	}
 	
 	@ApiOperation(value = "View a list of all available Transaction", response = Iterable.class)
-	@GetMapping(value={"","/"})
-	public Iterable<Transaction> listTransaction()
+	@GetMapping(value={"/getAllTransactions"})
+	public TransactionsResponse getAllTransaction()
 	{
-		Iterable<Transaction> listTransaction = transactionService.list();
-		return listTransaction;
+		TransactionsResponse transactionsResponse = new TransactionsResponse();
+		List<Transaction> lstTransactions = null;
+		lstTransactions = transactionService.listAllTransactions();
+		if(lstTransactions != null && lstTransactions.size()>0)
+		{
+		transactionsResponse.setMessage(Constants.SUCCESS);
+		transactionsResponse.setStatus(Constants.SUCCESS);
+		transactionsResponse.setTransactions(lstTransactions);
+		}
+		else
+		{
+			transactionsResponse.setMessage(Constants.TRANSACTION_NOT_FOUND);
+			transactionsResponse.setStatus(Constants.FAILURE);			
+		}
+		return transactionsResponse;
 	}
 	
 	@ApiOperation(value = "Buy transaction.Transaction initiated with the Buy process.", response = Boolean.class)
@@ -73,18 +87,18 @@ public class TransactionController {
 	{
 		boolean isTransSuccessful;
 		Transaction transaction = modelMapper.map(transactionRequest, Transaction.class);
-		//logger.info("Buy transaction request received with Product details : "+product);
-		TransactionResponse response=new TransactionResponse();
-//		Transaction transaction = new Transaction();
-//		transaction.setBuyerId(product.getBuyerId());
-//		transaction.setSellerId(product.getSellerId());
-		//transaction.setQuantity(product.getb );
-		
+		transaction.setTransactionStatus(EnumTransactionStatus.TRANSACTION_INITIALIZED);
+		TransactionResponse response=new TransactionResponse();		
 		isTransSuccessful=transactionService.save(transaction);
+		if(isTransSuccessful)
+		{
 		response.setMessage(Constants.TRANSACTION_ADDED_SUCCSESSFULLY);
 		response.setStatus(Constants.SUCCESS);
-		//response.setProduct(addedProduct);
-		//logger.info("Add new Product request completed with Product details : "+addedProduct);
+		}
+		else {
+			response.setMessage(Constants.TRANSACTION_ADD_FAILED  );
+			response.setStatus(Constants.FAILURE);			
+		}
 		return response;
 		
 	}
@@ -127,7 +141,7 @@ public class TransactionController {
 		}
 		else
 		{
-			transactionsResponse.setMessage(Constants.FAILURE);
+			transactionsResponse.setMessage(Constants.TRANSACTION_NOT_FOUND);
 			transactionsResponse.setStatus(Constants.FAILURE);			
 		}
 		return transactionsResponse;
@@ -148,7 +162,7 @@ public class TransactionController {
 		}
 		else
 		{
-			transactionsResponse.setMessage(Constants.FAILURE);
+			transactionsResponse.setMessage(Constants.TRANSACTION_NOT_FOUND);
 			transactionsResponse.setStatus(Constants.FAILURE);			
 		}
 		return transactionsResponse;

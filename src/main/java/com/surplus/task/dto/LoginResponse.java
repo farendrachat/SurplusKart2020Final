@@ -2,6 +2,8 @@ package com.surplus.task.dto;
 
 import java.util.Date;
 
+import com.surplus.task.utils.EnumUserRoles;
+
 import lombok.Data;
 
 @Data
@@ -12,7 +14,7 @@ public class LoginResponse {
 	
 	private String status;
 	
-	private String role;
+	private EnumUserRoles role;
 	
 	private Date loginTime;
 	

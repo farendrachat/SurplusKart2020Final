@@ -25,7 +25,7 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 	@Override
-	public Iterable<Transaction> list() {
+	public List<Transaction> listAllTransactions() {
 		return transactionRepository.findAll();
 	}
 
