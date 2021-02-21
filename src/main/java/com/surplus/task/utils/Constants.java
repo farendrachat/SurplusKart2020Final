@@ -30,6 +30,10 @@ public final class Constants {
 	
 	public static final String TRANSACTION_NOT_FOUND="Transaction not available";
 	
+    public static final String TRANSACTION_UPDATED_SUCCSESSFULLY="Transaction updated";
+	
+	public static final String TRANSACTION_UPDATE_FAILED="Transaction could not be updated";
+	
 	public static final String IMAGES_ADDED_SUCCSESSFULLY="Images added successfully";
 	
 	public final static String PRODUCT_DELETED_SUCCESSFULLY="Product deleted successfully";

@@ -6,11 +6,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -19,6 +21,7 @@ import com.surplus.task.domain.Product;
 import com.surplus.task.domain.Transaction;
 import com.surplus.task.domain.User;
 import com.surplus.task.dto.ProductResponse;
+import com.surplus.task.dto.TransactionChangeRequest;
 import com.surplus.task.dto.TransactionRequest;
 import com.surplus.task.dto.TransactionResponse;
 import com.surplus.task.dto.TransactionsResponse;
@@ -30,7 +33,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:9000/")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/transaction")
 @Api(value="Surplus Kart", description="Operations pertaining to transactions for various deals in the Application") 
 public class TransactionController {
@@ -87,7 +90,8 @@ public class TransactionController {
 	{
 		boolean isTransSuccessful;
 		Transaction transaction = modelMapper.map(transactionRequest, Transaction.class);
-		transaction.setTransactionStatus(EnumTransactionStatus.TRANSACTION_INITIALIZED);
+		transaction.setTransactionStatus(EnumTransactionStatus.PAYMENT_DONE_BY_BUYER);
+		transaction.setDtPaymentDoneByBuyer(LocalDate.now());
 		TransactionResponse response=new TransactionResponse();		
 		isTransSuccessful=transactionService.save(transaction);
 		if(isTransSuccessful)
@@ -103,7 +107,7 @@ public class TransactionController {
 		
 	}
 	
-	@ApiOperation(value = "Save", response = Boolean.class)
+/*	@ApiOperation(value = "Save", response = Boolean.class)
 	@CrossOrigin
 	@PostMapping(path="/save",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
 	public ProductResponse saveProduct(@RequestBody Product product)
@@ -116,7 +120,7 @@ public class TransactionController {
 		//response.setProduct(addedProduct);
 		//logger.info("Add new Product request completed with Product details : "+addedProduct);
 		return response;
-	}
+	}*/
 	
 	@ApiOperation(value = "Delete Transaction by transaction id", response = Boolean.class)
 	@CrossOrigin
@@ -166,6 +170,69 @@ public class TransactionController {
 			transactionsResponse.setStatus(Constants.FAILURE);			
 		}
 		return transactionsResponse;
+	}
+	
+	
+	
+	@ApiOperation(value = "The transaction status is updated to the next status and update date will be current date", response = Boolean.class)
+	@CrossOrigin
+	@PostMapping("/changeTransactionStatus")
+	public TransactionResponse changeTransactionStatus(@RequestBody TransactionChangeRequest transactionChangeRequest)
+	{
+		boolean isStatusChanged;
+		Transaction transaction = transactionService.getTransaction(transactionChangeRequest.getTransId());
+		//transaction.setTransactionStatus(transactionChangeRequest.getTransStatus());
+		transaction.setUpdatedOn(LocalDate.now());
+		transaction.setUpdatedBy(transactionChangeRequest.getUserName());
+		//transaction.setProductApprovedByBuyer(transactionChangeRequest.isProductApprovedByBuyer());
+		switch(transactionChangeRequest.getTransStatus())
+		{
+		case PAYMENT_DONE_BY_BUYER : 
+			transaction.setTransactionStatus(EnumTransactionStatus.MONEY_RESERVED_BY_ADMIN);
+			transaction.setDtBuyerMoneyReceivedByAdmin(LocalDate.now());
+			break;
+		case MONEY_RESERVED_BY_ADMIN :
+			transaction.setTransactionStatus(EnumTransactionStatus.MATERIAL_DISPATCHED_BY_SELLER);
+			transaction.setDtProductDispatchedBySeller(LocalDate.now());
+		    break;
+		case MATERIAL_DISPATCHED_BY_SELLER :
+			transaction.setTransactionStatus(EnumTransactionStatus.MATERIAL_REACHED_BUYER);
+			transaction.setDtProductReceivedByBuyer(LocalDate.now());
+			break;
+		case MATERIAL_REACHED_BUYER :
+			transaction.setTransactionStatus(EnumTransactionStatus.MATERIAL_APPROVED_BY_BUYER);
+			transaction.setDtProductApprovedByBuyer(LocalDate.now());
+			break;
+		case MATERIAL_APPROVED_BY_BUYER :
+			transaction.setTransactionStatus(EnumTransactionStatus.MONEY_TRANSFERRED_TO_SELLER);
+			transaction.setProductApprovedByBuyer(transactionChangeRequest.isProductApprovedByBuyer());
+			transaction.setDtMoneySentToSellerByAdmin(LocalDate.now());
+			break;
+		case MONEY_TRANSFERRED_TO_SELLER :
+			transaction.setTransactionStatus(EnumTransactionStatus.MONEY_REACHED_TO_SELLER);
+			transaction.setDtMoneyReachedToSeller(LocalDate.now());
+			break;
+		case MONEY_REACHED_TO_SELLER :
+			transaction.setTransactionStatus(EnumTransactionStatus.TRANSACTION_COMPLETED);
+			transaction.setDtTransactionCompleted(LocalDate.now());
+			break;
+		default:
+			break;		
+		}
+		
+		TransactionResponse response=new TransactionResponse();		
+		isStatusChanged=transactionService.save(transaction);
+		if(isStatusChanged)
+		{
+		response.setMessage(Constants.TRANSACTION_UPDATED_SUCCSESSFULLY);
+		response.setStatus(Constants.SUCCESS);
+		}
+		else {
+			response.setMessage(Constants.TRANSACTION_UPDATE_FAILED);
+			response.setStatus(Constants.FAILURE);			
+		}
+		return response;
+		
 	}
 
 }

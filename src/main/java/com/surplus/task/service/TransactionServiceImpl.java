@@ -31,20 +31,17 @@ public class TransactionServiceImpl implements TransactionService {
 
 	@Override
 	public boolean save(Transaction transaction) {
-		boolean isSaved = false;
 		boolean isQuantityUpdated = false;
 		try{
 		if(this.transactionRepository.save(transaction)!=null);	
 		{
 			isQuantityUpdated = reduceQuantity(transaction);
-			isSaved = true;
+			
 		}
 		}catch(Exception ex)
 		{
-			isSaved = false;
 			System.out.println("exception in TransactionServiceImpl is :"+ex.getMessage());
-		}
-		
+		}		
 		return isQuantityUpdated;
 	}
 	
@@ -54,7 +51,11 @@ public class TransactionServiceImpl implements TransactionService {
 		Optional<Product> product = productRepository.findProductByPrId(transaction.getPrId());
 		if(product.isPresent())
 		{
-			product.get().setAvailablePackets(product.get().getAvailablePackets()-transaction.getBuyPacketQty());
+			if((product.get().getAvailablePackets()-transaction.getBuyPacketQty()) >= 0 ) {
+			product.get().setAvailablePackets(product.get().getAvailablePackets()-transaction.getBuyPacketQty());}
+			else {
+				return false;
+			}
 		}
 		
 		productRepository.save(product.get());		

@@ -42,37 +42,57 @@ public class Transaction {
 	@Column
 	protected LocalDate updatedOn;
 	
+	protected String updatedBy;
+	
 	@CreatedDate
 	@Column
 	private LocalDate startDate;
+	
+//	@Column(columnDefinition = "boolean default false")
+//	protected boolean paymentDoneByBuyer;
+	
+	@Column
+	protected LocalDate dtPaymentDoneByBuyer;
 
+	
+//	@Column(columnDefinition = "boolean default false")
+//	protected boolean buyerMoneyReceivedByAdmin;
+	
+	@Column
+	protected LocalDate dtBuyerMoneyReceivedByAdmin;
+	
+//	@Column(columnDefinition = "boolean default false")
+//	protected boolean productDispatchedBySeller;
+	
+	@Column
+	protected LocalDate dtProductDispatchedBySeller;
+
+//	@Column(columnDefinition = "boolean default false")
+//	protected boolean productReceivedByBuyer;
+	
+	@Column
+	protected LocalDate dtProductReceivedByBuyer;
 	
 	@Column(columnDefinition = "boolean default false")
-	protected boolean buyerMoneyReceived;
+	protected boolean productApprovedByBuyer;
 	
 	@Column
-	protected LocalDate dtBuyerMoneyReceived;
-
-	@Column(columnDefinition = "boolean default false")
-	protected boolean buyerProdReceived;
+	protected LocalDate dtProductApprovedByBuyer;
+	
+//	@Column(columnDefinition = "boolean default false")
+//	protected boolean moneySentToSellerByAdmin;
 	
 	@Column
-	protected LocalDate dtBuyerProdReceived;
+	protected LocalDate dtMoneySentToSellerByAdmin;	
 
-	@Column(columnDefinition = "boolean default false")
-	protected boolean sellerMoneyReached;
+//	@Column(columnDefinition = "boolean default false")
+//	protected boolean moneyReachedToSeller;
 	
 	@Column
-	protected LocalDate dtSellerMoneyReached;
-
-	@Column(columnDefinition = "boolean default false")
-	protected boolean completeStatus;
+	protected LocalDate dtMoneyReachedToSeller;	
 	
 	@Column
-	protected LocalDate dtCompleteStatus;
-
-	@Column
-	protected int completedBy;
+	protected LocalDate dtTransactionCompleted;	
 
 	@Enumerated(EnumType.STRING)
 	protected EnumTransactionStatus transactionStatus  ;	
