@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:9000/")
+@CrossOrigin()
 @RequestMapping("/api/negotiate")
 @Api(value="Surplus Kart", description="Operations pertaining to negotiations done in the Application") 
 public class NegotiateController {

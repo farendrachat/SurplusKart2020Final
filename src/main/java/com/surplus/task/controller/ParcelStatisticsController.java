@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiResponses;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:9000/")
+@CrossOrigin()
 @RequestMapping("/api/parcel")
 @Api(value="Surplus Kart", description="Operations pertaining to transfer of sample/product between buyer,seller and Admin") 
 public class ParcelStatisticsController {

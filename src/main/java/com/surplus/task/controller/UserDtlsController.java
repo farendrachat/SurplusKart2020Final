@@ -15,7 +15,7 @@ import com.surplus.task.service.UserDtlsService;
 import io.swagger.annotations.Api;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin()
 @RequestMapping("/api/userdtls")
 @Api(value="Surplus Kart", description="Operations pertaining to User Details in Application") 
 public class UserDtlsController {

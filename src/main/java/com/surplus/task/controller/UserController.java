@@ -27,7 +27,7 @@ import com.surplus.task.utils.Constants;
 import io.swagger.annotations.Api;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin()
 @RequestMapping("/api/user")
 @Api(value="Surplus Kart", description="Operations pertaining to users in the Application") 
 public class UserController {
@@ -41,7 +41,7 @@ public class UserController {
 	{
 		this.userService = userService;
 	}
-	@CrossOrigin(origins = "http://localhost:4200")
+	
 	@GetMapping(value="/users",produces = MediaType.APPLICATION_JSON_VALUE)
 	public UsersResponse listUser()
 	{
@@ -52,9 +52,8 @@ public class UserController {
 		response.setUsers(userService.getAllUsers());
 		logger.info("Get all Users request completed");
 		return response;
-	}
+	}	
 	
-	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/save")
 	public Response saveUser(@RequestBody UserRequestDTO userRequestDTO)
 	{	
@@ -84,7 +83,6 @@ public class UserController {
 	
 	
 	@DeleteMapping(value = "/deleteUser/{id}")
-	@CrossOrigin(origins = "http://localhost:4200")
 	private Response deleteUser(@PathVariable Integer id) {
 		logger.info("Delete User request received with id : "+id);
 		Response response = new Response();

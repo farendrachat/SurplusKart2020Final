@@ -12,6 +12,7 @@ import javax.persistence.Id;
 
 import org.springframework.data.annotation.CreatedDate;
 
+import com.surplus.task.utils.EnumNextMilestone;
 import com.surplus.task.utils.EnumTransactionStatus;
 
 import lombok.Data;
@@ -95,5 +96,8 @@ public class Transaction {
 	protected LocalDate dtTransactionCompleted;	
 
 	@Enumerated(EnumType.STRING)
-	protected EnumTransactionStatus transactionStatus  ;	
+	protected EnumTransactionStatus transactionStatus  ;
+	
+	@Enumerated(EnumType.STRING)
+	protected EnumNextMilestone nextMilestone  ;	
 }

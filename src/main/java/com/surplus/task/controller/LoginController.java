@@ -17,7 +17,7 @@ import io.swagger.annotations.Api;
 
 
 @RestController
-@CrossOrigin("http://localhost:4200")
+@CrossOrigin()
 @RequestMapping("/api/security")
 @Api(value="Surplus Kart", description="Operations pertaining to products in Application") 
 public class LoginController {

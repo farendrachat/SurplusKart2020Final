@@ -16,7 +16,7 @@ import com.surplus.task.service.MessageService;
 import io.swagger.annotations.Api;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:9000/")
+@CrossOrigin()
 @RequestMapping("/api/message")
 @Api(value="Surplus Kart", description="Operations pertaining to messages between users and super admin in the Application") 
 public class MessageController {

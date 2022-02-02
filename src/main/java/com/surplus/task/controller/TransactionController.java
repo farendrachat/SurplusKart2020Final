@@ -27,13 +27,14 @@ import com.surplus.task.dto.TransactionResponse;
 import com.surplus.task.dto.TransactionsResponse;
 import com.surplus.task.service.TransactionService;
 import com.surplus.task.utils.Constants;
+import com.surplus.task.utils.EnumNextMilestone;
 import com.surplus.task.utils.EnumTransactionStatus;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin()
 @RequestMapping("/api/transaction")
 @Api(value="Surplus Kart", description="Operations pertaining to transactions for various deals in the Application") 
 public class TransactionController {
@@ -48,10 +49,11 @@ public class TransactionController {
 	
 	@ApiOperation(value = "Get transaction from transId", response = Transaction.class)
 	@GetMapping("/getTransaction/{transId}")
-	public Transaction getTransaction(@PathVariable int transId)
+	public void getTransaction(@PathVariable int transId)
 	{
 		Transaction transaction = transactionService.getTransaction(transId) ;
-		return transaction;
+		
+		
 	}
 	
 	@ApiOperation(value = "Get list of transaction by product id listed datewise asc", response = Transaction.class)
@@ -91,6 +93,7 @@ public class TransactionController {
 		boolean isTransSuccessful;
 		Transaction transaction = modelMapper.map(transactionRequest, Transaction.class);
 		transaction.setTransactionStatus(EnumTransactionStatus.PAYMENT_DONE_BY_BUYER);
+		transaction.setNextMilestone(EnumNextMilestone.WAITING_MONEY_RESERVED_BY_ADMIN);
 		transaction.setDtPaymentDoneByBuyer(LocalDate.now());
 		TransactionResponse response=new TransactionResponse();		
 		isTransSuccessful=transactionService.save(transaction);
@@ -185,36 +188,43 @@ public class TransactionController {
 		transaction.setUpdatedOn(LocalDate.now());
 		transaction.setUpdatedBy(transactionChangeRequest.getUserName());
 		//transaction.setProductApprovedByBuyer(transactionChangeRequest.isProductApprovedByBuyer());
-		switch(transactionChangeRequest.getTransStatus())
+		switch(transactionChangeRequest.getNextMilestone())
 		{
-		case PAYMENT_DONE_BY_BUYER : 
+		case WAITING_MONEY_RESERVED_BY_ADMIN : 
 			transaction.setTransactionStatus(EnumTransactionStatus.MONEY_RESERVED_BY_ADMIN);
 			transaction.setDtBuyerMoneyReceivedByAdmin(LocalDate.now());
+			transaction.setNextMilestone(EnumNextMilestone.WAITING_MATERIAL_DISPATCHED_BY_SELLER);
 			break;
-		case MONEY_RESERVED_BY_ADMIN :
+		case WAITING_MATERIAL_DISPATCHED_BY_SELLER :
 			transaction.setTransactionStatus(EnumTransactionStatus.MATERIAL_DISPATCHED_BY_SELLER);
 			transaction.setDtProductDispatchedBySeller(LocalDate.now());
+			transaction.setNextMilestone(EnumNextMilestone.WAITING_MATERIAL_REACHED_BUYER);
 		    break;
-		case MATERIAL_DISPATCHED_BY_SELLER :
+		case WAITING_MATERIAL_REACHED_BUYER :
 			transaction.setTransactionStatus(EnumTransactionStatus.MATERIAL_REACHED_BUYER);
 			transaction.setDtProductReceivedByBuyer(LocalDate.now());
+			transaction.setNextMilestone(EnumNextMilestone.WAITING_MATERIAL_APPROVED_BY_BUYER);
 			break;
-		case MATERIAL_REACHED_BUYER :
+		case WAITING_MATERIAL_APPROVED_BY_BUYER :
 			transaction.setTransactionStatus(EnumTransactionStatus.MATERIAL_APPROVED_BY_BUYER);
 			transaction.setDtProductApprovedByBuyer(LocalDate.now());
+			transaction.setNextMilestone(EnumNextMilestone.WAITING_MONEY_TRANSFERRED_TO_SELLER);
 			break;
-		case MATERIAL_APPROVED_BY_BUYER :
+		case WAITING_MONEY_TRANSFERRED_TO_SELLER :
 			transaction.setTransactionStatus(EnumTransactionStatus.MONEY_TRANSFERRED_TO_SELLER);
 			transaction.setProductApprovedByBuyer(transactionChangeRequest.isProductApprovedByBuyer());
 			transaction.setDtMoneySentToSellerByAdmin(LocalDate.now());
+			transaction.setNextMilestone(EnumNextMilestone.WAITING_MONEY_REACHED_TO_SELLER);
 			break;
-		case MONEY_TRANSFERRED_TO_SELLER :
+		case WAITING_MONEY_REACHED_TO_SELLER :
 			transaction.setTransactionStatus(EnumTransactionStatus.MONEY_REACHED_TO_SELLER);
 			transaction.setDtMoneyReachedToSeller(LocalDate.now());
+			transaction.setNextMilestone(EnumNextMilestone.WAITING_TRANSACTION_COMPLETED);
 			break;
-		case MONEY_REACHED_TO_SELLER :
+		case WAITING_TRANSACTION_COMPLETED :
 			transaction.setTransactionStatus(EnumTransactionStatus.TRANSACTION_COMPLETED);
 			transaction.setDtTransactionCompleted(LocalDate.now());
+			transaction.setNextMilestone(null);
 			break;
 		default:
 			break;		

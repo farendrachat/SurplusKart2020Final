@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Table(name="image_model")
 @AllArgsConstructor
-//@Data
+@Data
 @NoArgsConstructor
 @ToString
 public class ImageModel {

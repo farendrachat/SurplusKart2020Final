@@ -14,7 +14,7 @@ import com.surplus.task.domain.Task;
 import com.surplus.task.service.TaskService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:9000/")
+@CrossOrigin()
 @RequestMapping("/api/approval")
 public class ApprovalController {
 	

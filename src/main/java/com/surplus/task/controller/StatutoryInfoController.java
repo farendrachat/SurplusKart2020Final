@@ -17,7 +17,7 @@ import com.surplus.task.service.StatutoryInfoService;
 import io.swagger.annotations.Api;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:9000/")
+@CrossOrigin()
 @RequestMapping("/api/statutoryInfo")
 @Api(value="Surplus Kart", description="Operations pertaining to statutory information of users in the Application") 
 public class StatutoryInfoController {

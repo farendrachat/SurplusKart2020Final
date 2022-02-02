@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@CrossOrigin("http://localhost:4200")
+@CrossOrigin()
 @RequestMapping("/api/cart")
 @Api(value = "Surplus Kart", description = "Operations pertaining to cart in Application")
 public class CartController {
@@ -108,7 +108,7 @@ public class CartController {
 	}
 
 	@DeleteMapping(value = "/deleteCart/{prId}")
-	@CrossOrigin(origins = "http://localhost:4200")
+	@CrossOrigin()
 	public Response deleteCart(@PathVariable int itemId) {
 		logger.info("Delete Cart request received with id : " + itemId);
 		Response response = new Response();
